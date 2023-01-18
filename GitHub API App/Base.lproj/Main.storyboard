@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="tlG-xx-2K7">
     <device id="retina6_12" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
@@ -9,44 +9,52 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Users View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="GitHub_API_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="UsersViewController" customModule="GitHub_API_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="PEx-Gg-Pax">
-                                <rect key="frame" x="0.0" y="0.0" width="393" height="783"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="q08-12-ROH">
+                                <rect key="frame" x="0.0" y="103" width="393" height="715"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                             </tableView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Tls-mE-ToT">
-                                <rect key="frame" x="16" y="791" width="361" height="35"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="filled" title="Button"/>
-                                <connections>
-                                    <action selector="fetchButtonPressed:" destination="BYZ-38-t0r" eventType="touchUpInside" id="JZT-N0-eA9"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="Tls-mE-ToT" firstAttribute="top" secondItem="PEx-Gg-Pax" secondAttribute="bottom" constant="8" id="2Gn-LO-V8V"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Tls-mE-ToT" secondAttribute="trailing" constant="16" id="DGD-nN-G2h"/>
-                            <constraint firstItem="PEx-Gg-Pax" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="XZL-3o-d2H"/>
-                            <constraint firstItem="PEx-Gg-Pax" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="gAs-0G-hK3"/>
-                            <constraint firstItem="Tls-mE-ToT" firstAttribute="bottom" secondItem="6Tk-OE-BBY" secondAttribute="bottom" constant="8" id="jeg-k4-7a8"/>
-                            <constraint firstItem="Tls-mE-ToT" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="16" id="rD4-ai-pKB"/>
-                            <constraint firstItem="PEx-Gg-Pax" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="zcD-wr-6B4"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="q08-12-ROH" secondAttribute="trailing" id="0bu-GQ-wPb"/>
+                            <constraint firstItem="q08-12-ROH" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="Buc-v7-JrD"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="q08-12-ROH" secondAttribute="bottom" id="tQM-oq-0ha"/>
+                            <constraint firstItem="q08-12-ROH" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="tf1-pa-gx2"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="arB-BO-Wvn"/>
                     <connections>
-                        <outlet property="usersListTableView" destination="PEx-Gg-Pax" id="1v9-jx-dIU"/>
+                        <outlet property="usersListTableView" destination="q08-12-ROH" id="GVP-YU-0IH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="892.36641221374043" y="3.5211267605633805"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="Ksd-8M-M4I">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="tlG-xx-2K7" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="eZT-JO-s8q">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Qtz-cN-Da4"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7TQ-Dm-Uyx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-34.351145038167935" y="3.5211267605633805"/>
         </scene>
