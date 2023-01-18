@@ -17,12 +17,6 @@ final class UsersViewController: UIViewController {
     
     //MARK: - View Controller Life Cycle
     
-    override func viewWillAppear(_ animated: Bool) {
-        DispatchQueue.main.async {
-            self.usersListTableView.reloadData()
-        }
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -84,6 +78,9 @@ final class UsersViewController: UIViewController {
                 let decoder = JSONDecoder()
                 let decodedObject = try decoder.decode([UsersList].self, from: data)
                 self.users = decodedObject
+                DispatchQueue.main.async {
+                    self.usersListTableView.reloadData()
+                }
             } catch {
                 print(error.localizedDescription)
             }
@@ -128,6 +125,9 @@ final class UsersViewController: UIViewController {
                let decoder = JSONDecoder()
                let decodedObject = try decoder.decode(SearchResult.self, from: data)
                self.users = decodedObject.items
+               DispatchQueue.main.async {
+                   self.usersListTableView.reloadData()
+               }
            } catch {
                print(error.localizedDescription)
            }
