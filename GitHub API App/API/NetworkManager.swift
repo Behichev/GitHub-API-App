@@ -11,7 +11,7 @@ struct NetworkManager {
     
     static let shared = NetworkManager()
     
-    private let apiKey = ""
+    let apiKey = ""
     
     func makeUsersRequest(complition: @escaping(([GHUserModel]) -> Void)) {
         
@@ -26,9 +26,9 @@ struct NetworkManager {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue(apiKey, forHTTPHeaderField: "Authorization")
-        request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
+        request.addValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+        request.addValue("Bearer " + apiKey, forHTTPHeaderField: "Authorization")
+        request.addValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
         
         let session = URLSession(configuration: .default)
         
@@ -72,9 +72,9 @@ struct NetworkManager {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue(apiKey, forHTTPHeaderField: "Authorization")
-        request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
+        request.addValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+        request.addValue("Bearer " + apiKey, forHTTPHeaderField: "Authorization")
+        request.addValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
         
         let session = URLSession(configuration: .default)
         
@@ -120,9 +120,9 @@ struct NetworkManager {
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.setValue(apiKey, forHTTPHeaderField: "Authorization")
-        request.setValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
+        request.addValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
+        request.addValue("Bearer " + apiKey, forHTTPHeaderField: "Authorization")
+        request.addValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
         
         let session = URLSession(configuration: .default)
         
