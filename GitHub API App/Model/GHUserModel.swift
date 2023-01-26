@@ -12,7 +12,7 @@ struct GHUserModel: Decodable {
     let id: Int
     let nodeId: String
     let avatarUrl: String
-    let gravatarId: String?
+    let gravatarId: String
     let url: String
     let htmlUrl: String
     let followersUrl: String
@@ -26,5 +26,6 @@ struct GHUserModel: Decodable {
     let receivedEventsUrl: String
     let type: String
     let siteAdmin: Bool
+
 }
 

@@ -21,18 +21,16 @@ struct GHAuthenticatedUserModel: Decodable {
     let starredUrl: String
     let subscriptionsUrl: String
     let organizationsUrl: String
-    let reposUrl: String
-    let eventsUrl: String
     let receivedEventsUrl: String
     let type: String
     let siteAdmin: Bool
-    let name: String
-    let company: String
-    let blog: String
-    let location: String
-    let email: String
-    let hireable: Bool
-    let bio: String
+    let name: String?
+    let company: String?
+    let blog: String?
+    let location: String?
+    let email: String?
+    let hireable: Bool?
+    let bio: String?
     let twitterUsername: String?
     let publicRepos: Int
     let publicGists: Int
@@ -40,11 +38,11 @@ struct GHAuthenticatedUserModel: Decodable {
     let following: Int
     let createdAt: String
     let updatedAt: String
-    let privateGists: Int
-    let totalPrivateRepos: Int
-    let ownedPrivateRepos: Int
-    let diskUsage: Int
-    let collaborators: Int
-    let twoFactorAuthentication: Bool
-    let plan : GHPlanModel
+    let privateGists: Int?
+    let totalPrivateRepos: Int?
+    let ownedPrivateRepos: Int?
+    let diskUsage: Int?
+    let collaborators: Int?
+    let twoFactorAuthentication: Bool?
+    let plan: GHPlanModel?
 }

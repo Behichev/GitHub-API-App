@@ -11,8 +11,6 @@ final class UserTableViewCell: UITableViewCell {
     
     @IBOutlet weak private var userNicknameLabel: UILabel!
     @IBOutlet weak private var userAvatarImage: UIImageView!
-    @IBOutlet weak private var followersLabel: UILabel!
-    @IBOutlet weak private var followingLabel: UILabel!
     
     private var cacheManager = CacheManager()
     
@@ -27,11 +25,9 @@ final class UserTableViewCell: UITableViewCell {
     
     func configure(with item: GHUserModel) {
         userNicknameLabel.text = item.login
-        followersLabel.text = item.followersUrl
-        followingLabel.text = item.followingUrl
         if let imageURL = URL(string: item.avatarUrl) {
-            cacheManager.downloadImage(url: imageURL) { image in
-                self.userAvatarImage.image = image
+                cacheManager.downloadImage(url: imageURL) { image in
+                    self.userAvatarImage.image = image
             }
         }
     }
@@ -39,8 +35,6 @@ final class UserTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         userAvatarImage.image = nil
         userNicknameLabel.text = nil
-        followersLabel.text = nil
-        followingLabel.text = nil
     }
     
     private func setupImageView() {

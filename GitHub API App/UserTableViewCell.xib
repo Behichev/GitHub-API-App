@@ -24,43 +24,24 @@
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Y2n-ja-lGl">
-                        <rect key="frame" x="116" y="24" width="196" height="24"/>
+                        <rect key="frame" x="116" y="54" width="196" height="24"/>
                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ctF-qr-vTw">
-                        <rect key="frame" x="116" y="52" width="196" height="18"/>
-                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                        <nil key="textColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IZG-Wg-va0">
-                        <rect key="frame" x="116" y="74" width="180" height="18"/>
-                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
                 <constraints>
-                    <constraint firstAttribute="trailingMargin" secondItem="IZG-Wg-va0" secondAttribute="trailing" constant="8" id="1g4-Cm-vjc"/>
-                    <constraint firstItem="ctF-qr-vTw" firstAttribute="top" secondItem="Y2n-ja-lGl" secondAttribute="bottom" constant="4" id="5z3-vq-yfT"/>
-                    <constraint firstItem="ctF-qr-vTw" firstAttribute="leading" secondItem="sHn-oh-5xA" secondAttribute="trailing" constant="16" id="Gjb-gY-LVN"/>
-                    <constraint firstItem="IZG-Wg-va0" firstAttribute="top" secondItem="ctF-qr-vTw" secondAttribute="bottom" constant="4" id="HMh-Nq-o8s"/>
                     <constraint firstItem="sHn-oh-5xA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="N5n-WN-8el"/>
-                    <constraint firstItem="IZG-Wg-va0" firstAttribute="leading" secondItem="sHn-oh-5xA" secondAttribute="trailing" constant="16" id="ajP-ra-tgx"/>
-                    <constraint firstAttribute="trailing" secondItem="Y2n-ja-lGl" secondAttribute="trailing" constant="8" id="cnk-Qa-ibT"/>
+                    <constraint firstItem="Y2n-ja-lGl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="54" id="eSz-Cb-1su"/>
+                    <constraint firstItem="Y2n-ja-lGl" firstAttribute="leading" secondItem="sHn-oh-5xA" secondAttribute="trailing" constant="16" id="gHQ-zd-5a7"/>
                     <constraint firstAttribute="bottom" secondItem="sHn-oh-5xA" secondAttribute="bottom" constant="24" id="kMS-nt-MRn"/>
-                    <constraint firstItem="Y2n-ja-lGl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="24" id="li3-fE-GQc"/>
-                    <constraint firstAttribute="trailing" secondItem="ctF-qr-vTw" secondAttribute="trailing" constant="8" id="sQl-ii-pHO"/>
                     <constraint firstItem="sHn-oh-5xA" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="24" id="sU3-5I-htK"/>
-                    <constraint firstItem="Y2n-ja-lGl" firstAttribute="leading" secondItem="sHn-oh-5xA" secondAttribute="trailing" constant="16" id="uVR-H0-EAA"/>
+                    <constraint firstAttribute="trailing" secondItem="Y2n-ja-lGl" secondAttribute="trailing" constant="8" id="usD-iv-Ufu"/>
+                    <constraint firstAttribute="bottom" secondItem="Y2n-ja-lGl" secondAttribute="bottom" constant="54" id="zWP-7J-jQQ"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
-                <outlet property="followersLabel" destination="ctF-qr-vTw" id="ErR-Zr-JyG"/>
-                <outlet property="followingLabel" destination="IZG-Wg-va0" id="mH6-4T-wY1"/>
                 <outlet property="userAvatarImage" destination="sHn-oh-5xA" id="mzZ-9T-E5n"/>
                 <outlet property="userNicknameLabel" destination="Y2n-ja-lGl" id="TCb-rN-L6y"/>
             </connections>

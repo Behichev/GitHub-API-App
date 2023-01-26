@@ -11,7 +11,7 @@ struct NetworkManager {
     
     static let shared = NetworkManager()
     
-    let apiKey = ""
+    private let apiKey = ""
     
     func makeUsersRequest(complition: @escaping(([GHUserModel]) -> Void)) {
         
@@ -20,14 +20,14 @@ struct NetworkManager {
         components.host = "api.github.com"
         components.path = "/users"
         components.queryItems = [URLQueryItem(name: "since", value: "0"),
-                                 URLQueryItem(name: "per_page", value: "30")]
+                                 URLQueryItem(name: "per_page", value: "100")]
         
         guard let url = components.url else { return }
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.addValue("Bearer " + apiKey, forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.addValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
         
         let session = URLSession(configuration: .default)
@@ -73,7 +73,7 @@ struct NetworkManager {
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.addValue("Bearer " + apiKey, forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.addValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
         
         let session = URLSession(configuration: .default)
@@ -98,9 +98,8 @@ struct NetworkManager {
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let decodedObject = try decoder.decode(GHAuthenticatedUserModel.self, from: data)
                 complition(decodedObject)
-                print(decodedObject)
             } catch {
-                print(error.localizedDescription)
+                print(error)
             }
         }
         dataTask.resume()
@@ -114,14 +113,14 @@ struct NetworkManager {
         components.path = "/search/users"
         
         components.queryItems = [URLQueryItem(name: "q", value: q),
-                                 URLQueryItem(name: "per_page", value: "30")]
+                                 URLQueryItem(name: "per_page", value: "100")]
         
         guard let url = components.url else { return }
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.addValue("Bearer " + apiKey, forHTTPHeaderField: "Authorization")
+        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         request.addValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
         
         let session = URLSession(configuration: .default)
