@@ -13,7 +13,8 @@ final class UsersViewController: UIViewController {
     
     private let searchController = UISearchController()
     private var arrayOfUsers: [GHUserModel] = []
-    
+    private let networkManager = NetworkManager()
+    var timer: Timer?
     
     //MARK: - View Controller Life Cycle
     
@@ -42,7 +43,7 @@ final class UsersViewController: UIViewController {
     }
     
     private func fetchUsers() {
-        NetworkManager.shared.makeUsersRequest { users in
+        networkManager.makeUsersRequest { users in
             DispatchQueue.main.async {
                 self.arrayOfUsers = users
                 self.usersListTableView.reloadData()
@@ -51,7 +52,7 @@ final class UsersViewController: UIViewController {
     }
     
     private func searchUser(with query: String) {
-        NetworkManager.shared.makeSearchRequest(q: query) { user in
+        networkManager.makeSearchRequest(q: query) { user in
             self.arrayOfUsers = user
             DispatchQueue.main.async {
                 self.usersListTableView.reloadData()
@@ -94,7 +95,11 @@ extension UsersViewController: UISearchBarDelegate {
         guard let text = searchBar.text, !text.isEmpty else  {
             return
         }
-        searchUser(with: text)
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false, block: { [self] _ in
+            searchUser(with: text)
+        })
+        
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

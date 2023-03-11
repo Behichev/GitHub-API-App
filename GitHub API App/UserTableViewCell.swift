@@ -7,19 +7,19 @@
 
 import UIKit
 
-final class UserTableViewCell: UITableViewCell {
+public final class UserTableViewCell: UITableViewCell {
     
     @IBOutlet weak private var userNicknameLabel: UILabel!
     @IBOutlet weak private var userAvatarImage: UIImageView!
     
     private var cacheManager = CacheManager()
     
-    override func awakeFromNib() {
+    public override func awakeFromNib() {
         super.awakeFromNib()
         setupImageView()
     }
     
-    override func setSelected(_ selected: Bool, animated: Bool) {
+    public override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
     
@@ -32,7 +32,7 @@ final class UserTableViewCell: UITableViewCell {
         }
     }
     
-    override func prepareForReuse() {
+    public override func prepareForReuse() {
         userAvatarImage.image = nil
         userNicknameLabel.text = nil
     }

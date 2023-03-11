@@ -9,7 +9,6 @@ import Foundation
 
 struct NetworkManager {
     
-    static let shared = NetworkManager()
     
     private let apiKey = ""
     
