@@ -8,17 +8,17 @@
 import Foundation
 
 struct NetworkManager {
+    var counter = 0
     
+    private let apiKey = "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"
     
-    private let apiKey = ""
-    
-    func makeUsersRequest(complition: @escaping(([GHUserModel]) -> Void)) {
+    func makeUsersRequest(since: Int , complition: @escaping(([UserModel]) -> Void)) {
         
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.github.com"
         components.path = "/users"
-        components.queryItems = [URLQueryItem(name: "since", value: "0"),
+        components.queryItems = [URLQueryItem(name: "since", value: String(since)),
                                  URLQueryItem(name: "per_page", value: "100")]
         
         guard let url = components.url else { return }
@@ -50,7 +50,10 @@ struct NetworkManager {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let decodedObject = try decoder.decode([GHUserModel].self, from: data)
-                complition(decodedObject)
+                let users = decodedObject.map({ user in
+                    return UserModel(username: user.login, userID: user.id, userAvatarUrl: user.avatarUrl)
+                })
+                complition(users)
             } catch {
                 print(error.localizedDescription)
             }
@@ -58,53 +61,7 @@ struct NetworkManager {
         dataTask.resume()
     }
     
-    func userInfoRequest(with userName: String, complition: @escaping (GHAuthenticatedUserModel) -> Void) {
-        
-        var components = URLComponents()
-        components.scheme = "https"
-        components.host = "api.github.com"
-        components.path = "/users/\(userName)"
-        
-        
-        
-        guard let url = components.url else { return }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.addValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
-        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.addValue("2022-11-28", forHTTPHeaderField: "X-GitHub-Api-Version")
-        
-        let session = URLSession(configuration: .default)
-        
-        let dataTask = session.dataTask(with: request) { data, response, error in
-            guard error == nil else {
-                print("Client error")
-                return
-            }
-            
-            guard let data = data else {
-                return
-            }
-            
-            guard let response = response as? HTTPURLResponse, (200...299).contains(response.statusCode) else {
-                print("Server error")
-                return
-            }
-            
-            do {
-                let decoder = JSONDecoder()
-                decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let decodedObject = try decoder.decode(GHAuthenticatedUserModel.self, from: data)
-                complition(decodedObject)
-            } catch {
-                print(error)
-            }
-        }
-        dataTask.resume()
-    }
-    
-    func makeSearchRequest(q: String, complition: @escaping (([GHUserModel]) -> Void )) {
+    func makeSearchRequest(q: String, complition: @escaping (([UserModel]) -> Void )) {
         
         var components = URLComponents()
         components.scheme = "https"
@@ -143,7 +100,10 @@ struct NetworkManager {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let decodedObject = try decoder.decode(GHSearcResultModel.self, from: data)
-                complition(decodedObject.items)
+                let users = decodedObject.items.map({ user in
+                    return UserModel(username: user.login, userID: user.id, userAvatarUrl: user.avatarUrl)
+                })
+                complition(users)
             } catch {
                 print(error.localizedDescription)
             }

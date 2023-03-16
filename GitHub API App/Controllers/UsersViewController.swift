@@ -12,8 +12,9 @@ final class UsersViewController: UIViewController {
     @IBOutlet weak private var usersListTableView: UITableView!
     
     private let searchController = UISearchController()
-    private var arrayOfUsers: [GHUserModel] = []
-    private let networkManager = NetworkManager()
+    private var arrayOfUsers = [UserModel]()
+    private var networkManager = NetworkManager()
+    
     var timer: Timer?
     
     //MARK: - View Controller Life Cycle
@@ -22,7 +23,14 @@ final class UsersViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         delegates()
-        fetchUsers()
+        
+        networkManager.makeUsersRequest(since: networkManager.counter) { [weak self] users in
+            self?.arrayOfUsers.append(contentsOf: users)
+            
+            DispatchQueue.main.async {
+                self?.usersListTableView.reloadData()
+            }
+        }
     }
     
     //MARK: - Functions
@@ -42,14 +50,6 @@ final class UsersViewController: UIViewController {
         navigationController?.navigationItem.hidesSearchBarWhenScrolling = true
     }
     
-    private func fetchUsers() {
-        networkManager.makeUsersRequest { users in
-            DispatchQueue.main.async {
-                self.arrayOfUsers = users
-                self.usersListTableView.reloadData()
-            }
-        }
-    }
     
     private func searchUser(with query: String) {
         networkManager.makeSearchRequest(q: query) { user in
@@ -58,6 +58,11 @@ final class UsersViewController: UIViewController {
                 self.usersListTableView.reloadData()
             }
         }
+    }
+    
+    private func refresh() {
+        networkManager.counter = 0
+        arrayOfUsers = [UserModel]()
     }
     
     
@@ -112,6 +117,31 @@ extension UsersViewController: UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        fetchUsers()
+        refresh()
+        
+        networkManager.makeUsersRequest(since: networkManager.counter) { [weak self] users in
+            self?.arrayOfUsers.append(contentsOf: users)
+            
+            DispatchQueue.main.async {
+                self?.usersListTableView.reloadData()
+            }
+        }
+    }
+}
+
+extension UsersViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let position = scrollView.contentOffset.y
+        if position > (usersListTableView.contentSize.height - 100 - scrollView.frame.size.height) {
+            networkManager.counter += 100
+            
+            networkManager.makeUsersRequest(since: networkManager.counter) { [weak self] users in
+                self?.arrayOfUsers.append(contentsOf: users)
+                
+                DispatchQueue.main.async {
+                    self?.usersListTableView.reloadData()
+                }
+            }
+        }
     }
 }

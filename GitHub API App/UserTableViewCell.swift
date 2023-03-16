@@ -23,9 +23,9 @@ public final class UserTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
     
-    func configure(with item: GHUserModel) {
-        userNicknameLabel.text = item.login
-        if let imageURL = URL(string: item.avatarUrl) {
+    func configure(with item: UserModel) {
+        userNicknameLabel.text = item.username
+        if let imageURL = URL(string: item.userAvatarUrl) {
                 cacheManager.downloadImage(url: imageURL) { image in
                     self.userAvatarImage.image = image
             }

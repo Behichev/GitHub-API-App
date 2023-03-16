@@ -26,6 +26,5 @@ struct GHUserModel: Decodable {
     let receivedEventsUrl: String
     let type: String
     let siteAdmin: Bool
-
 }
 

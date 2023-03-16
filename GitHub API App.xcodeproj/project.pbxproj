@@ -12,6 +12,7 @@
 		23272CAF2978920C0050EB32 /* UserTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23272CAD2978920B0050EB32 /* UserTableViewCell.swift */; };
 		23272CB02978920C0050EB32 /* UserTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 23272CAE2978920B0050EB32 /* UserTableViewCell.xib */; };
 		23272CB2297894160050EB32 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23272CB1297894160050EB32 /* CacheManager.swift */; };
+		234DE8E429C3398A00B71B59 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 234DE8E329C3398A00B71B59 /* UserModel.swift */; };
 		2370B03D2979A29C000799FB /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2370B03C2979A29C000799FB /* NetworkManager.swift */; };
 		23858DB02971EF0F00FDFCC9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23858DAF2971EF0F00FDFCC9 /* AppDelegate.swift */; };
 		23858DB22971EF0F00FDFCC9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23858DB12971EF0F00FDFCC9 /* SceneDelegate.swift */; };
@@ -19,7 +20,7 @@
 		23858DB72971EF0F00FDFCC9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23858DB52971EF0F00FDFCC9 /* Main.storyboard */; };
 		23858DB92971EF1300FDFCC9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 23858DB82971EF1300FDFCC9 /* Assets.xcassets */; };
 		23858DBC2971EF1300FDFCC9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 23858DBA2971EF1300FDFCC9 /* LaunchScreen.storyboard */; };
-		23858DC429749B4500FDFCC9 /* GHUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23858DC329749B4500FDFCC9 /* GHUserModel.swift */; };
+		23858DC429749B4500FDFCC9 /* GHUserDatal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23858DC329749B4500FDFCC9 /* GHUserDatal.swift */; };
 		23ECC50129794B210012EAA3 /* GHPlanModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23ECC50029794B210012EAA3 /* GHPlanModel.swift */; };
 		23ECC50329794D350012EAA3 /* GHAuthenticatedUserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23ECC50229794D350012EAA3 /* GHAuthenticatedUserModel.swift */; };
 /* End PBXBuildFile section */
@@ -30,6 +31,7 @@
 		23272CAD2978920B0050EB32 /* UserTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserTableViewCell.swift; sourceTree = "<group>"; };
 		23272CAE2978920B0050EB32 /* UserTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = UserTableViewCell.xib; sourceTree = "<group>"; };
 		23272CB1297894160050EB32 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		234DE8E329C3398A00B71B59 /* UserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		2370B03C2979A29C000799FB /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		23858DAC2971EF0F00FDFCC9 /* GitHub API App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "GitHub API App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		23858DAF2971EF0F00FDFCC9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -39,7 +41,7 @@
 		23858DB82971EF1300FDFCC9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		23858DBB2971EF1300FDFCC9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		23858DBD2971EF1300FDFCC9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		23858DC329749B4500FDFCC9 /* GHUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHUserModel.swift; sourceTree = "<group>"; };
+		23858DC329749B4500FDFCC9 /* GHUserDatal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHUserDatal.swift; sourceTree = "<group>"; };
 		23ECC50029794B210012EAA3 /* GHPlanModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHPlanModel.swift; sourceTree = "<group>"; };
 		23ECC50229794D350012EAA3 /* GHAuthenticatedUserModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GHAuthenticatedUserModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,7 +60,7 @@
 		23272CB3297895860050EB32 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				23858DC329749B4500FDFCC9 /* GHUserModel.swift */,
+				23858DC329749B4500FDFCC9 /* GHUserDatal.swift */,
 				23ECC50229794D350012EAA3 /* GHAuthenticatedUserModel.swift */,
 				23ECC50029794B210012EAA3 /* GHPlanModel.swift */,
 				23272CA9297873110050EB32 /* GHSearcResultModel.swift */,
@@ -96,6 +98,7 @@
 		2370B03E2979A475000799FB /* API */ = {
 			isa = PBXGroup;
 			children = (
+				23272CB3297895860050EB32 /* Model */,
 				2370B03C2979A29C000799FB /* NetworkManager.swift */,
 			);
 			path = API;
@@ -123,10 +126,10 @@
 				23858DAF2971EF0F00FDFCC9 /* AppDelegate.swift */,
 				23858DB12971EF0F00FDFCC9 /* SceneDelegate.swift */,
 				2370B03E2979A475000799FB /* API */,
+				234DE8E329C3398A00B71B59 /* UserModel.swift */,
 				2343F561298339AF00108166 /* Controllers */,
 				2318D5672979E54D006CBDD1 /* AppConstants.swift */,
 				2343F55F2983394A00108166 /* Resources */,
-				23272CB3297895860050EB32 /* Model */,
 				23272CB1297894160050EB32 /* CacheManager.swift */,
 				23272CAD2978920B0050EB32 /* UserTableViewCell.swift */,
 				2343F5602983399300108166 /* View */,
@@ -206,7 +209,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				23858DC429749B4500FDFCC9 /* GHUserModel.swift in Sources */,
+				23858DC429749B4500FDFCC9 /* GHUserDatal.swift in Sources */,
 				23858DB42971EF0F00FDFCC9 /* UsersViewController.swift in Sources */,
 				2370B03D2979A29C000799FB /* NetworkManager.swift in Sources */,
 				2318D5682979E54D006CBDD1 /* AppConstants.swift in Sources */,
@@ -216,6 +219,7 @@
 				23272CAF2978920C0050EB32 /* UserTableViewCell.swift in Sources */,
 				23858DB22971EF0F00FDFCC9 /* SceneDelegate.swift in Sources */,
 				23ECC50129794B210012EAA3 /* GHPlanModel.swift in Sources */,
+				234DE8E429C3398A00B71B59 /* UserModel.swift in Sources */,
 				23272CB2297894160050EB32 /* CacheManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
