@@ -23,14 +23,12 @@ final class UsersViewController: UIViewController {
         super.viewDidLoad()
         setupUI()
         delegates()
+        resetCurrentPage()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         
-        networkManager.makeUsersRequest(since: networkManager.counter) { [weak self] users in
-            self?.arrayOfUsers.append(contentsOf: users)
-            
-            DispatchQueue.main.async {
-                self?.usersListTableView.reloadData()
-            }
-        }
     }
     
     //MARK: - Functions
@@ -48,8 +46,18 @@ final class UsersViewController: UIViewController {
         self.navigationController?.navigationBar.topItem?.searchController = searchController
         searchController.searchBar.placeholder = "Search"
         navigationController?.navigationItem.hidesSearchBarWhenScrolling = true
+        usersListTableView.separatorStyle = .none
     }
     
+    private func createSpinnerFooter() -> UIView {
+        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 100))
+        let spinner = UIActivityIndicatorView()
+        spinner.center = footerView.center
+        footerView.addSubview(spinner)
+        spinner.startAnimating()
+        
+        return footerView
+    }
     
     private func searchUser(with query: String) {
         networkManager.makeSearchRequest(q: query) { user in
@@ -60,12 +68,32 @@ final class UsersViewController: UIViewController {
         }
     }
     
-    private func refresh() {
-        networkManager.counter = 0
+    private func resetCurrentPage() {
+        networkManager.currentIDs = 0
         arrayOfUsers = [UserModel]()
+        networkManager.makeUsersRequest(since: networkManager.currentIDs) { [weak self] users in
+            self?.arrayOfUsers.append(contentsOf: users)
+            
+            DispatchQueue.main.async {
+                self?.usersListTableView.reloadData()
+            }
+        }
     }
     
-    
+    private func nextPage() {
+//        networkManager.currentIDs += 99
+        
+        networkManager.makeUsersRequest(since: networkManager.currentIDs) { [weak self] users in
+            
+            self?.arrayOfUsers.append(contentsOf: users)
+            
+            DispatchQueue.main.async {
+                self?.usersListTableView.reloadData()
+                self?.usersListTableView.tableFooterView = nil
+            }
+            print(self?.networkManager.currentIDs)
+        }
+    }
 }
 
 //MARK: - Table View Data Source
@@ -83,6 +111,18 @@ extension UsersViewController: UITableViewDataSource {
         }
         return UITableViewCell()
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        print(arrayOfUsers[indexPath.row].userID)
+    }
+    
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        if indexPath.row == arrayOfUsers.count - 1 {
+//            networkManager.currentIDs += 29
+//            print(arrayOfUsers.count)
+//            nextPage()
+//        }
+//    }
 }
 
 //MARK: - Table View Delegate
@@ -104,7 +144,6 @@ extension UsersViewController: UISearchBarDelegate {
         timer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false, block: { [self] _ in
             searchUser(with: text)
         })
-        
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -113,34 +152,28 @@ extension UsersViewController: UISearchBarDelegate {
         }
         searchUser(with: text)
         searchBar.text = ""
-        
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        refresh()
-        
-        networkManager.makeUsersRequest(since: networkManager.counter) { [weak self] users in
-            self?.arrayOfUsers.append(contentsOf: users)
-            
-            DispatchQueue.main.async {
-                self?.usersListTableView.reloadData()
-            }
-        }
+        resetCurrentPage()
     }
 }
 
 extension UsersViewController: UIScrollViewDelegate {
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        networkManager.isLoadingData = false
+    }
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("didDecelerating")
+    }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let position = scrollView.contentOffset.y
-        if position > (usersListTableView.contentSize.height - 100 - scrollView.frame.size.height) {
-            networkManager.counter += 100
-            
-            networkManager.makeUsersRequest(since: networkManager.counter) { [weak self] users in
-                self?.arrayOfUsers.append(contentsOf: users)
-                
-                DispatchQueue.main.async {
-                    self?.usersListTableView.reloadData()
-                }
+        usersListTableView.tableFooterView = createSpinnerFooter()
+
+        if !networkManager.isLoadingData {
+            if ((usersListTableView.contentOffset.y + usersListTableView.frame.size.height) >= usersListTableView.contentSize.height) {
+                networkManager.isLoadingData = true
+                networkManager.currentIDs += 29
+                nextPage()
             }
         }
     }

@@ -8,18 +8,18 @@
 import Foundation
 
 struct NetworkManager {
-    var counter = 0
+    var currentIDs = 0
+    var isLoadingData = false
     
-    private let apiKey = "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"
+    private let apiKey = 
     
     func makeUsersRequest(since: Int , complition: @escaping(([UserModel]) -> Void)) {
-        
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.github.com"
         components.path = "/users"
         components.queryItems = [URLQueryItem(name: "since", value: String(since)),
-                                 URLQueryItem(name: "per_page", value: "100")]
+                                 URLQueryItem(name: "per_page", value: "30")]
         
         guard let url = components.url else { return }
         
@@ -73,6 +73,8 @@ struct NetworkManager {
         
         guard let url = components.url else { return }
         
+        print(url)
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.addValue("application/vnd.github+json", forHTTPHeaderField: "Accept")
@@ -110,5 +112,4 @@ struct NetworkManager {
         }
         dataTask.resume()
     }
-    
 }
