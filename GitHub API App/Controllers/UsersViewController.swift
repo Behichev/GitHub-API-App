@@ -8,34 +8,41 @@
 import UIKit
 
 final class UsersViewController: UIViewController {
-    
+    //MARK: - Outlets
     @IBOutlet weak private var usersListTableView: UITableView!
-    
+    //MARK: - Properties
     private let searchController = UISearchController()
     private var arrayOfUsers = [UserModel]()
     private var networkManager = NetworkManager()
     
     var timer: Timer?
     
-    //MARK: - View Controller Life Cycle
+    typealias DataSource = UITableViewDiffableDataSource<Section, UserModel>
+    typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, UserModel>
     
+    private var dataSource: DataSource!
+    private var snapshot = DataSourceSnapshot()
+    
+    enum Section {
+        case main
+    }
+    //MARK: - View Controller Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        snapshot.appendSections([Section.main])
+        resetCurrentPage()
+        configureTableViewDataSource()
         setupUI()
         delegates()
-        resetCurrentPage()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        
     }
-    
     //MARK: - Functions
-    
     private func delegates() {
         usersListTableView.delegate = self
-        usersListTableView.dataSource = self
+        //        usersListTableView.dataSource = self
         searchController.searchBar.delegate = self
         usersListTableView.register(UINib(nibName: AppConstants.Identifiers.userCellNib, bundle: nil), forCellReuseIdentifier: AppConstants.Identifiers.userCellReuseIdentifiere)
     }
@@ -61,80 +68,70 @@ final class UsersViewController: UIViewController {
     
     private func searchUser(with query: String) {
         networkManager.makeSearchRequest(q: query) { user in
-            self.arrayOfUsers = user
-            DispatchQueue.main.async {
-                self.usersListTableView.reloadData()
-            }
+            self.applySnapshot(users: user)
         }
+    }
+    
+    private func configureTableViewDataSource() {
+        dataSource = DataSource(tableView: usersListTableView, cellProvider: { (tableView, indexPath, user) -> UserTableViewCell? in
+            let cell = tableView.dequeueReusableCell(withIdentifier: AppConstants.Identifiers.userCellReuseIdentifiere, for: indexPath) as! UserTableViewCell
+            cell.configure(with: user)
+            return cell
+        })
+    }
+    
+    private func applySnapshot(users: [UserModel]) {
+        snapshot = DataSourceSnapshot()
+        snapshot.appendSections([Section.main])
+        snapshot.appendItems(users, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func updateSnapshot(_ users: [UserModel]) {
+        snapshot = dataSource.snapshot()
+        snapshot.appendItems(users, toSection: .main)
+        dataSource.apply(snapshot, animatingDifferences: false)
+    }
+    
+    private func clearSnapshot() {
+        let emptySnapshot = DataSourceSnapshot()
+        dataSource.apply(emptySnapshot)
     }
     
     private func resetCurrentPage() {
         networkManager.currentIDs = 0
         arrayOfUsers = [UserModel]()
-        networkManager.makeUsersRequest(since: networkManager.currentIDs) { [weak self] users in
-            self?.arrayOfUsers.append(contentsOf: users)
-            
-            DispatchQueue.main.async {
-                self?.usersListTableView.reloadData()
-            }
-        }
-    }
-    
-    private func nextPage() {
-//        networkManager.currentIDs += 99
         
         networkManager.makeUsersRequest(since: networkManager.currentIDs) { [weak self] users in
-            
-            self?.arrayOfUsers.append(contentsOf: users)
-            
+            self?.applySnapshot(users: users)
+        }
+    }
+    
+    private func loadMoreData() {
+        networkManager.currentIDs += 99
+        
+        networkManager.makeUsersRequest(since: networkManager.currentIDs) { [weak self] users in
+            self?.updateSnapshot(users)
             DispatchQueue.main.async {
-                self?.usersListTableView.reloadData()
-                self?.usersListTableView.tableFooterView = nil
+                self?.networkManager.isLoading = false
             }
-            print(self?.networkManager.currentIDs)
         }
     }
 }
-
-//MARK: - Table View Data Source
-
-extension UsersViewController: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        arrayOfUsers.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let cell = tableView.dequeueReusableCell(withIdentifier: AppConstants.Identifiers.userCellReuseIdentifiere) as? UserTableViewCell {
-            let userItem = arrayOfUsers[indexPath.row]
-            cell.configure(with: userItem)
-            return cell
-        }
-        return UITableViewCell()
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print(arrayOfUsers[indexPath.row].userID)
-    }
-    
-//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-//        if indexPath.row == arrayOfUsers.count - 1 {
-//            networkManager.currentIDs += 29
-//            print(arrayOfUsers.count)
-//            nextPage()
-//        }
-//    }
-}
-
 //MARK: - Table View Delegate
-
 extension UsersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 132
     }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if !networkManager.isLoading && (indexPath.row == dataSource.snapshot().numberOfItems - 1) {
+            networkManager.isLoading = true
+            loadMoreData()
+        }
+    }
 }
-
 //MARK: - Search Bar Delegate
-
 extension UsersViewController: UISearchBarDelegate {    
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         guard let text = searchBar.text, !text.isEmpty else  {
@@ -142,6 +139,7 @@ extension UsersViewController: UISearchBarDelegate {
         }
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false, block: { [self] _ in
+            clearSnapshot()
             searchUser(with: text)
         })
     }
@@ -150,31 +148,13 @@ extension UsersViewController: UISearchBarDelegate {
         guard let text = searchBar.text, !text.isEmpty else  {
             return
         }
+        clearSnapshot()
         searchUser(with: text)
         searchBar.text = ""
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        clearSnapshot()
         resetCurrentPage()
-    }
-}
-
-extension UsersViewController: UIScrollViewDelegate {
-    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        networkManager.isLoadingData = false
-    }
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("didDecelerating")
-    }
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        usersListTableView.tableFooterView = createSpinnerFooter()
-
-        if !networkManager.isLoadingData {
-            if ((usersListTableView.contentOffset.y + usersListTableView.frame.size.height) >= usersListTableView.contentSize.height) {
-                networkManager.isLoadingData = true
-                networkManager.currentIDs += 29
-                nextPage()
-            }
-        }
     }
 }

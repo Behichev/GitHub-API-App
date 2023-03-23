@@ -8,17 +8,17 @@
 import UIKit
 
 public final class UserTableViewCell: UITableViewCell {
-    
+    //MARK: - Outlets
     @IBOutlet weak private var userNicknameLabel: UILabel!
     @IBOutlet weak private var userAvatarImage: UIImageView!
-    
+    //MARK: - Properties
     private var cacheManager = CacheManager()
     
     public override func awakeFromNib() {
         super.awakeFromNib()
         setupImageView()
     }
-    
+    //MARK: - Functions
     public override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }

@@ -9,9 +9,9 @@ import Foundation
 
 struct NetworkManager {
     var currentIDs = 0
-    var isLoadingData = false
+    var isLoading = false
     
-    private let apiKey = 
+    private let apiKey = "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"
     
     func makeUsersRequest(since: Int , complition: @escaping(([UserModel]) -> Void)) {
         var components = URLComponents()
@@ -19,7 +19,7 @@ struct NetworkManager {
         components.host = "api.github.com"
         components.path = "/users"
         components.queryItems = [URLQueryItem(name: "since", value: String(since)),
-                                 URLQueryItem(name: "per_page", value: "30")]
+                                 URLQueryItem(name: "per_page", value: "100")]
         
         guard let url = components.url else { return }
         
