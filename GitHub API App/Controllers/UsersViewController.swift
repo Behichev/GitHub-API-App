@@ -29,11 +29,11 @@ final class UsersViewController: UIViewController {
     //MARK: - View Controller Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        snapshot.appendSections([Section.main])
-        resetCurrentPage()
+        registesterNibs()
         configureTableViewDataSource()
         setupUI()
         delegates()
+        performUsersListRequest()
     }
     
     override func viewDidLayoutSubviews() {
@@ -42,9 +42,13 @@ final class UsersViewController: UIViewController {
     //MARK: - Functions
     private func delegates() {
         usersListTableView.delegate = self
-        //        usersListTableView.dataSource = self
         searchController.searchBar.delegate = self
-        usersListTableView.register(UINib(nibName: AppConstants.Identifiers.userCellNib, bundle: nil), forCellReuseIdentifier: AppConstants.Identifiers.userCellReuseIdentifiere)
+    }
+    
+    private func registesterNibs() {
+        usersListTableView.register(UINib(nibName: AppConstants.Identifiers.userCellNib,
+                                          bundle: nil),
+                                    forCellReuseIdentifier: AppConstants.Identifiers.userCellReuseIdentifiere)
     }
     
     private func setupUI() {
@@ -66,9 +70,10 @@ final class UsersViewController: UIViewController {
         return footerView
     }
     
-    private func searchUser(with query: String) {
-        networkManager.makeSearchRequest(q: query) { user in
-            self.applySnapshot(users: user)
+    private func performUserSearchRequest(with query: String) {
+        networkManager.userSearchRequest(query) { user in
+            self.arrayOfUsers.append(contentsOf: user)
+            self.applySnapshot(users: self.arrayOfUsers)
         }
     }
     
@@ -98,19 +103,16 @@ final class UsersViewController: UIViewController {
         dataSource.apply(emptySnapshot)
     }
     
-    private func resetCurrentPage() {
+    private func performUsersListRequest() {
         networkManager.currentIDs = 0
-        arrayOfUsers = [UserModel]()
-        
-        networkManager.makeUsersRequest(since: networkManager.currentIDs) { [weak self] users in
+        networkManager.usersListRequest(since: networkManager.currentIDs) { [weak self] users in
             self?.applySnapshot(users: users)
         }
     }
     
     private func loadMoreData() {
         networkManager.currentIDs += 99
-        
-        networkManager.makeUsersRequest(since: networkManager.currentIDs) { [weak self] users in
+        networkManager.usersListRequest(since: networkManager.currentIDs) { [weak self] users in
             self?.updateSnapshot(users)
             DispatchQueue.main.async {
                 self?.networkManager.isLoading = false
@@ -140,7 +142,7 @@ extension UsersViewController: UISearchBarDelegate {
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false, block: { [self] _ in
             clearSnapshot()
-            searchUser(with: text)
+            performUserSearchRequest(with: text)
         })
     }
     
@@ -149,12 +151,12 @@ extension UsersViewController: UISearchBarDelegate {
             return
         }
         clearSnapshot()
-        searchUser(with: text)
+        performUserSearchRequest(with: text)
         searchBar.text = ""
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         clearSnapshot()
-        resetCurrentPage()
+        performUsersListRequest()
     }
 }

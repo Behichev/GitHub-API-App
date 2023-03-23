@@ -8,12 +8,12 @@
 import Foundation
 
 struct NetworkManager {
+    //MARK: - Properties
     var currentIDs = 0
     var isLoading = false
-    
-    private let apiKey = ""
-    
-    func makeUsersRequest(since: Int , complition: @escaping(([UserModel]) -> Void)) {
+    fileprivate let apiKey = ""
+    //MARK: - Functions
+    func usersListRequest(since: Int , complition: @escaping(([UserModel]) -> Void)) {
         var components = URLComponents()
         components.scheme = "https"
         components.host = "api.github.com"
@@ -61,7 +61,7 @@ struct NetworkManager {
         dataTask.resume()
     }
     
-    func makeSearchRequest(q: String, complition: @escaping (([UserModel]) -> Void )) {
+    func userSearchRequest(_ q: String, complition: @escaping (([UserModel]) -> Void )) {
         
         var components = URLComponents()
         components.scheme = "https"
