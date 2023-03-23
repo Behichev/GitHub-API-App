@@ -11,7 +11,7 @@ struct NetworkManager {
     var currentIDs = 0
     var isLoading = false
     
-    private let apiKey = "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"
+    private let apiKey = ""
     
     func makeUsersRequest(since: Int , complition: @escaping(([UserModel]) -> Void)) {
         var components = URLComponents()
