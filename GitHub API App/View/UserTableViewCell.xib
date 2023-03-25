@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -29,23 +30,35 @@
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="ULQ-pk-FFU">
+                        <rect key="frame" x="48" y="56" width="20" height="20"/>
+                        <color key="color" systemColor="linkColor"/>
+                    </activityIndicatorView>
                 </subviews>
                 <constraints>
                     <constraint firstItem="sHn-oh-5xA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="16" id="N5n-WN-8el"/>
                     <constraint firstItem="Y2n-ja-lGl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="54" id="eSz-Cb-1su"/>
                     <constraint firstItem="Y2n-ja-lGl" firstAttribute="leading" secondItem="sHn-oh-5xA" secondAttribute="trailing" constant="16" id="gHQ-zd-5a7"/>
+                    <constraint firstItem="ULQ-pk-FFU" firstAttribute="centerX" secondItem="sHn-oh-5xA" secondAttribute="centerX" id="k1T-hA-fqR"/>
                     <constraint firstAttribute="bottom" secondItem="sHn-oh-5xA" secondAttribute="bottom" constant="24" id="kMS-nt-MRn"/>
                     <constraint firstItem="sHn-oh-5xA" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="24" id="sU3-5I-htK"/>
+                    <constraint firstItem="ULQ-pk-FFU" firstAttribute="centerY" secondItem="sHn-oh-5xA" secondAttribute="centerY" id="sZI-A6-Vpw"/>
                     <constraint firstAttribute="trailing" secondItem="Y2n-ja-lGl" secondAttribute="trailing" constant="8" id="usD-iv-Ufu"/>
                     <constraint firstAttribute="bottom" secondItem="Y2n-ja-lGl" secondAttribute="bottom" constant="54" id="zWP-7J-jQQ"/>
                 </constraints>
             </tableViewCellContentView>
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
+                <outlet property="activityIndicator" destination="ULQ-pk-FFU" id="Wsm-WQ-va7"/>
                 <outlet property="userAvatarImage" destination="sHn-oh-5xA" id="mzZ-9T-E5n"/>
                 <outlet property="userNicknameLabel" destination="Y2n-ja-lGl" id="TCb-rN-L6y"/>
             </connections>
             <point key="canvasLocation" x="80.916030534351137" y="50.70422535211268"/>
         </tableViewCell>
     </objects>
+    <resources>
+        <systemColor name="linkColor">
+            <color red="0.0" green="0.47843137254901963" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>

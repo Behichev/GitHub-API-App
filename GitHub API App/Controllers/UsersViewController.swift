@@ -72,8 +72,7 @@ final class UsersViewController: UIViewController {
     
     private func performUserSearchRequest(with query: String) {
         networkManager.userSearchRequest(query) { user in
-            self.arrayOfUsers.append(contentsOf: user)
-            self.applySnapshot(users: self.arrayOfUsers)
+            self.applySnapshot(users: user)
         }
     }
     
@@ -143,6 +142,7 @@ extension UsersViewController: UISearchBarDelegate {
         timer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false, block: { [self] _ in
             clearSnapshot()
             performUserSearchRequest(with: text)
+            networkManager.isLoading = true
         })
     }
     
@@ -158,5 +158,6 @@ extension UsersViewController: UISearchBarDelegate {
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         clearSnapshot()
         performUsersListRequest()
+        networkManager.isLoading = false
     }
 }
