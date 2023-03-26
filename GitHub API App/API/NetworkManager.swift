@@ -11,6 +11,7 @@ struct NetworkManager {
     //MARK: - Properties
     var currentIDs = 0
     var isLoading = false
+    var currentPage = 1
     fileprivate let apiKey = ""
     //MARK: - Functions
     func usersListRequest(since: Int , complition: @escaping(([UserModel]) -> Void)) {
@@ -49,7 +50,7 @@ struct NetworkManager {
             do {
                 let decoder = JSONDecoder()
                 decoder.keyDecodingStrategy = .convertFromSnakeCase
-                let decodedObject = try decoder.decode([GHUserModel].self, from: data)
+                let decodedObject = try decoder.decode([GHUserData].self, from: data)
                 let users = decodedObject.map({ user in
                     return UserModel(username: user.login, userID: user.id, userAvatarUrl: user.avatarUrl)
                 })
@@ -61,7 +62,7 @@ struct NetworkManager {
         dataTask.resume()
     }
     
-    func userSearchRequest(_ q: String, complition: @escaping (([UserModel]) -> Void )) {
+    func userSearchRequest(_ q: String, page: Int, complition: @escaping (([UserModel]) -> Void )) {
         
         var components = URLComponents()
         components.scheme = "https"
@@ -69,11 +70,10 @@ struct NetworkManager {
         components.path = "/search/users"
         
         components.queryItems = [URLQueryItem(name: "q", value: q),
-                                 URLQueryItem(name: "per_page", value: "100")]
+                                 URLQueryItem(name: "per_page", value: "100"),
+        URLQueryItem(name: "page", value: String(page))]
         
         guard let url = components.url else { return }
-        
-        print(url)
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"

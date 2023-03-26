@@ -12,18 +12,20 @@ final class UsersViewController: UIViewController {
     @IBOutlet weak private var usersListTableView: UITableView!
     //MARK: - Properties
     private let searchController = UISearchController()
+    private let acitivityIndicator = UIActivityIndicatorView()
     private var arrayOfUsers = [UserModel]()
     private var networkManager = NetworkManager()
     
-    var timer: Timer?
+    private var isFromSearchList = false
+    private var timer: Timer?
     
-    typealias DataSource = UITableViewDiffableDataSource<Section, UserModel>
-    typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, UserModel>
+    private typealias DataSource = UITableViewDiffableDataSource<Section, UserModel>
+    private typealias DataSourceSnapshot = NSDiffableDataSourceSnapshot<Section, UserModel>
     
     private var dataSource: DataSource!
     private var snapshot = DataSourceSnapshot()
     
-    enum Section {
+    private enum Section {
         case main
     }
     //MARK: - View Controller Life Cycle
@@ -55,25 +57,14 @@ final class UsersViewController: UIViewController {
         navigationController?.navigationBar.prefersLargeTitles = true
         title = "Users"
         self.navigationController?.navigationBar.topItem?.searchController = searchController
-        searchController.searchBar.placeholder = "Search"
+        searchController.searchBar.placeholder = "Search user"
         navigationController?.navigationItem.hidesSearchBarWhenScrolling = true
+        usersListTableView.separatorColor = .link
         usersListTableView.separatorStyle = .none
-    }
-    
-    private func createSpinnerFooter() -> UIView {
-        let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: 100))
-        let spinner = UIActivityIndicatorView()
-        spinner.center = footerView.center
-        footerView.addSubview(spinner)
-        spinner.startAnimating()
-        
-        return footerView
-    }
-    
-    private func performUserSearchRequest(with query: String) {
-        networkManager.userSearchRequest(query) { user in
-            self.applySnapshot(users: user)
-        }
+        usersListTableView.backgroundView = acitivityIndicator
+        acitivityIndicator.hidesWhenStopped = true
+        acitivityIndicator.style = .large
+        acitivityIndicator.color = .link
     }
     
     private func configureTableViewDataSource() {
@@ -102,21 +93,49 @@ final class UsersViewController: UIViewController {
         dataSource.apply(emptySnapshot)
     }
     
-    private func performUsersListRequest() {
-        networkManager.currentIDs = 0
-        networkManager.usersListRequest(since: networkManager.currentIDs) { [weak self] users in
-            self?.applySnapshot(users: users)
+    private func performUserSearchRequest(with query: String, with page: Int) {
+        networkManager.userSearchRequest(query, page: page) { user in
+            DispatchQueue.main.async {
+                self.applySnapshot(users: user)
+            }
         }
     }
     
-    private func loadMoreData() {
+    private func performUsersListRequest() {
+        networkManager.currentIDs = 0
+        networkManager.usersListRequest(since: networkManager.currentIDs) { [weak self] users in
+            DispatchQueue.main.async {
+                self?.applySnapshot(users: users)
+            }
+        }
+    }
+    
+    private func loadMoreUsers() {
         networkManager.currentIDs += 99
         networkManager.usersListRequest(since: networkManager.currentIDs) { [weak self] users in
-            self?.updateSnapshot(users)
             DispatchQueue.main.async {
+                self?.updateSnapshot(users)
+            }
+            self?.networkManager.isLoading = false
+        }
+    }
+    
+    private func loadMoreSearchResults() {
+        networkManager.currentPage += 1
+        if let text = searchController.searchBar.text {
+            networkManager.userSearchRequest(text, page: networkManager.currentPage) { [weak self] user in
+                DispatchQueue.main.async {
+                    self?.updateSnapshot(user)
+                }
                 self?.networkManager.isLoading = false
             }
         }
+    }
+    
+    private func resetSearch() {
+        clearSnapshot()
+        isFromSearchList = false
+        networkManager.currentPage = 1
     }
 }
 //MARK: - Table View Delegate
@@ -128,7 +147,11 @@ extension UsersViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if !networkManager.isLoading && (indexPath.row == dataSource.snapshot().numberOfItems - 1) {
             networkManager.isLoading = true
-            loadMoreData()
+            if isFromSearchList {
+                loadMoreSearchResults()
+            } else {
+                loadMoreUsers()
+            }
         }
     }
 }
@@ -138,11 +161,16 @@ extension UsersViewController: UISearchBarDelegate {
         guard let text = searchBar.text, !text.isEmpty else  {
             return
         }
+        networkManager.currentPage = 1
+        DispatchQueue.main.async {
+            self.acitivityIndicator.startAnimating()
+        }
         timer?.invalidate()
         timer = Timer.scheduledTimer(withTimeInterval: 0.7, repeats: false, block: { [self] _ in
-            clearSnapshot()
-            performUserSearchRequest(with: text)
-            networkManager.isLoading = true
+            performUserSearchRequest(with: text, with: networkManager.currentPage)
+            DispatchQueue.main.async {
+                self.acitivityIndicator.stopAnimating()
+            }
         })
     }
     
@@ -150,14 +178,25 @@ extension UsersViewController: UISearchBarDelegate {
         guard let text = searchBar.text, !text.isEmpty else  {
             return
         }
+        DispatchQueue.main.async {
+            self.acitivityIndicator.startAnimating()
+        }
         clearSnapshot()
-        performUserSearchRequest(with: text)
+        performUserSearchRequest(with: text, with: networkManager.currentPage)
+        DispatchQueue.main.async {
+            self.acitivityIndicator.stopAnimating()
+        }
         searchBar.text = ""
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-        clearSnapshot()
+        resetSearch()
         performUsersListRequest()
-        networkManager.isLoading = false
+    }
+    
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        resetSearch()
+        isFromSearchList = true
+        return true
     }
 }

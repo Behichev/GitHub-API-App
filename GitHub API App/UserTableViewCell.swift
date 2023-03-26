@@ -52,5 +52,4 @@ public final class UserTableViewCell: UITableViewCell {
             userAvatarImage.layer.borderWidth = 3.0
             userAvatarImage.layer.borderColor = UIColor.link.cgColor
         }
-        
     }

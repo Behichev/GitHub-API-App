@@ -1,5 +1,5 @@
 //
-//  GHUserModel.swift
+//  GHUserData.swift
 //  GitHub API App
 //
 //  Created by Ivan Behichev on 15.01.2023.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GHUserModel: Decodable {
+struct GHUserData: Decodable {
     let login: String
     let id: Int
     let nodeId: String

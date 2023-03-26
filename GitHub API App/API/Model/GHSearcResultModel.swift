@@ -10,5 +10,5 @@ import Foundation
 struct GHSearcResultModel: Decodable {
     let totalCount: Int
     let incompleteResults: Bool
-    let items: [GHUserModel]
+    let items: [GHUserData]
 }
